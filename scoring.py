@@ -3,19 +3,20 @@ def calculate_gold_score(row):
     score = 0
     reasons = []
 
-    # EMA trendas
+    # EMA trumpas trendas
     if row["EMA_9"] > row["EMA_21"]:
         score += 10
-        reasons.append("✅ EMA 9 virš EMA 21 (+10)")
+        reasons.append("✅ EMA 9 > EMA 21 (+10)")
     else:
-        reasons.append("❌ EMA 9 žemiau EMA 21 (0)")
+        reasons.append("❌ EMA 9 < EMA 21 (0)")
 
 
+    # Vidutinis trendas
     if row["EMA_21"] > row["EMA_50"]:
         score += 10
-        reasons.append("✅ EMA 21 virš EMA 50 (+10)")
+        reasons.append("✅ EMA 21 > EMA 50 (+10)")
     else:
-        reasons.append("❌ EMA 21 žemiau EMA 50 (0)")
+        reasons.append("❌ EMA 21 < EMA 50 (0)")
 
 
     # VWAP
@@ -29,11 +30,11 @@ def calculate_gold_score(row):
     # RSI
     if 45 <= row["RSI"] <= 65:
         score += 10
-        reasons.append("✅ RSI sveikoje zonoje (+10)")
+        reasons.append("✅ RSI optimali zona (+10)")
     elif row["RSI"] > 70:
         reasons.append("⚠️ RSI perpirkta")
     else:
-        reasons.append("⚠️ RSI silpnas")
+        reasons.append("⚠️ RSI silpna")
 
 
     # Volume
@@ -41,38 +42,44 @@ def calculate_gold_score(row):
         score += 15
         reasons.append("🔥 Volume spike (+15)")
     else:
-        reasons.append("❌ Nėra volume spike")
+        reasons.append("❌ Volume spike nėra")
 
 
-    # Ilgesnis trendas
+    # Ilgas trendas
     if row["Close"] > row["EMA_200"]:
         score += 15
-        reasons.append("✅ Kaina virš EMA200 (+15)")
+        reasons.append("✅ Virš EMA200 (+15)")
     else:
-        reasons.append("❌ Kaina žemiau EMA200")
+        reasons.append("❌ Žemiau EMA200")
 
 
-    # Momentum
+    # ATR - rinkos judėjimas
     if row["ATR"] > 0:
         score += 5
+        reasons.append("✅ Yra volatilumas (+5)")
 
 
-    # Sprendimas
+    # Signalas
 
     if score >= 80:
         signal = "🔥 STRONG BUY"
+        confidence = "Aukšta"
 
     elif score >= 60:
         signal = "🟢 BUY"
+        confidence = "Vidutinė"
 
     elif score >= 40:
         signal = "🟡 WAIT"
+        confidence = "Neaišku"
 
     elif score >= 20:
         signal = "🟠 SELL WATCH"
+        confidence = "Silpna"
 
     else:
         signal = "🔴 STRONG SELL"
+        confidence = "Aukšta"
 
 
-    return score, signal, reasons
+    return score, signal, confidence, reasons
