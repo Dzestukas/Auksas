@@ -152,7 +152,7 @@ final_score, final_signal, confidence_final, final_reasons = final_decision(
     score,
     signal,
     h1_score,
-    h1_signal# Risk Management
+    h1_signal
 )
 if "BUY" in final_signal:
     trade_direction = "BUY"
