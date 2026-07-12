@@ -9,6 +9,7 @@ from decision import final_decision
 from risk import calculate_risk
 from chart import create_gold_chart
 from history_signals import generate_history_signals
+from backtest import run_backtest
 st.set_page_config(
     page_title="Gold Terminal PRO",
     layout="wide"
@@ -106,6 +107,54 @@ st.plotly_chart(
     fig,
     use_container_width=True
 )
+st.divider()
+
+st.subheader("📊 GOLD BACKTEST")
+
+
+results, win_rate = run_backtest(gold)
+
+
+b1, b2, b3 = st.columns(3)
+
+
+b1.metric(
+    "Trades",
+    len(results)
+)
+
+b2.metric(
+    "Win Rate",
+    f"{win_rate}%"
+)
+
+
+if len(results) > 0:
+
+    wins = len(
+        results[results["Result"] == "WIN"]
+    )
+
+    losses = len(
+        results[results["Result"] == "LOSS"]
+    )
+
+else:
+    wins = 0
+    losses = 0
+
+
+b3.metric(
+    "Wins",
+    wins
+)
+
+
+with st.expander("🔍 Backtest detalės"):
+
+    st.dataframe(
+        results.tail(50)
+    )
 st.divider()
 
 st.subheader("🔵 Gold Intraday Radar (H1)")
