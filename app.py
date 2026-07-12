@@ -2,93 +2,17 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 
-st.title("🟡 Gold Terminal PRO V2")
+st.title("🟡 Gold Indicator TEST")
 
 gold = yf.download(
     "GC=F",
-    period="30d",
+    period="5d",
     interval="5m"
 )
 
-# sutvarkom yfinance naują formatą
-if isinstance(gold.columns, pd.MultiIndex):
-    gold.columns = gold.columns.get_level_values(0)
+st.write("Duomenys gauti")
 
-gold = gold.dropna()
+st.write(gold.tail())
 
-# EMA
-gold["EMA_9"] = gold["Close"].ewm(span=9).mean()
-gold["EMA_21"] = gold["Close"].ewm(span=21).mean()
-gold["EMA_50"] = gold["Close"].ewm(span=50).mean()
-
-# RSI
-delta = gold["Close"].diff()
-
-gain = delta.where(delta > 0, 0)
-loss = -delta.where(delta < 0, 0)
-
-avg_gain = gain.rolling(14).mean()
-avg_loss = loss.rolling(14).mean()
-
-rs = avg_gain / avg_loss
-
-gold["RSI"] = 100 - (100 / (1 + rs))
-
-
-# VWAP
-typical_price = (
-    gold["High"] +
-    gold["Low"] +
-    gold["Close"]
-) / 3
-
-gold["VWAP"] = (
-    (typical_price * gold["Volume"]).cumsum()
-    /
-    gold["Volume"].cumsum()
-)
-
-
-last = gold.iloc[-1]
-
-
-col1, col2, col3, col4 = st.columns(4)
-
-col1.metric(
-    "Gold",
-    f"${float(last['Close']):.2f}"
-)
-
-col2.metric(
-    "EMA 9",
-    f"{float(last['EMA_9']):.2f}"
-)
-
-col3.metric(
-    "EMA 21",
-    f"{float(last['EMA_21']):.2f}"
-)
-
-col4.metric(
-    "RSI",
-    f"{float(last['RSI']):.1f}"
-)
-
-
-st.write(
-    "VWAP:",
-    round(float(last["VWAP"]),2)
-)
-
-
-st.line_chart(
-    gold[
-        [
-        "Close",
-        "EMA_9",
-        "EMA_21",
-        "EMA_50",
-        "VWAP"
-        ]
-    ]
-)
+st.write("Stulpeliai:")
+st.write(gold.columns)
