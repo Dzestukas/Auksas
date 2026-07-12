@@ -5,6 +5,7 @@ import pandas as pd
 from indicators import add_indicators
 from scoring import calculate_gold_score
 from intraday import calculate_intraday_score
+from decision import final_decision
 st.set_page_config(
     page_title="Gold Terminal PRO",
     layout="wide"
