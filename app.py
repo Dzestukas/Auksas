@@ -220,3 +220,12 @@ tg_message = f"🚨 *GOLD 100-SCORE SIGNALAS* 🚨\nNuosprendis: *{signal_type}*
 if signal_type != "NEUTRALUS (Laukite)" and signal_type != st.session_state.last_signal:
     send_telegram_message(tg_message)
     st.session_state.last_signal = signal_type
+from telegram_bot import send_telegram_message
+
+import streamlit as st
+
+if st.button("📲 Test Telegram"):
+    result = send_telegram_message(
+        "🚀 Gold Terminal PRO V2 prijungtas!"
+    )
+    st.write(result)
