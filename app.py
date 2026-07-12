@@ -87,3 +87,14 @@ gold["Volume_Spike"] = (
     gold["Volume"] >
     gold["Volume_Avg"] * 1.5
 )                                                                                                          
+col5, col6 = st.columns(2)
+
+col5.metric(
+    "VWAP",
+    f"{float(last['VWAP']):.2f}"
+)
+
+col6.metric(
+    "Volume Spike",
+    "🔥 YES" if last["Volume_Spike"] else "NO"
+)
