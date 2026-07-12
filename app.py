@@ -1,11 +1,13 @@
 import streamlit as st
-import pandas as pd
+import yfinance as yf
 
-st.title("Pandas test")
+st.title("Gold Data Test")
 
-df = pd.DataFrame({
-    "Price": [4000, 4010, 4020],
-    "Volume": [100, 200, 300]
-})
+gold = yf.download(
+    "GC=F",
+    period="5d",
+    interval="5m"
+)
 
-st.write(df)
+st.write("Atsisiųsta")
+st.write(gold.shape)
