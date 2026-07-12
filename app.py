@@ -2,99 +2,68 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 
-st.title("🟡 Gold Terminal V2 - Indicators TEST")
+from indicators import add_indicators
 
-gold = yf.download(
-    "GC=F",
-    period="30d",
-    interval="5m"
+
+st.set_page_config(
+    page_title="Gold Terminal PRO",
+    layout="wide"
 )
 
-# Sutvarkome yfinance formatą
-if isinstance(gold.columns, pd.MultiIndex):
-    gold.columns = gold.columns.get_level_values(0)
 
-gold = gold.dropna()
+st.title("🟡 Gold Terminal PRO V3")
 
-# EMA
-gold["EMA_9"] = gold["Close"].ewm(span=9, adjust=False).mean()
-gold["EMA_21"] = gold["Close"].ewm(span=21, adjust=False).mean()
-gold["EMA_50"] = gold["Close"].ewm(span=50, adjust=False).mean()
 
-# RSI
-delta = gold["Close"].diff()
+@st.cache_data(ttl=300)
+def load_gold():
 
-gain = delta.where(delta > 0, 0)
-loss = -delta.where(delta < 0, 0)
+    data = yf.download(
+        "GC=F",
+        period="30d",
+        interval="5m"
+    )
 
-avg_gain = gain.rolling(14).mean()
-avg_loss = loss.rolling(14).mean()
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.get_level_values(0)
 
-rs = avg_gain / avg_loss
+    return data.dropna()
 
-gold["RSI"] = 100 - (100 / (1 + rs))
+
+
+gold = load_gold()
+
+gold = add_indicators(gold)
 
 
 last = gold.iloc[-1]
 
-col1, col2, col3, col4 = st.columns(4)
 
-col1.metric(
+c1,c2,c3,c4 = st.columns(4)
+
+
+c1.metric(
     "Gold",
-    f"{float(last['Close']):.2f}"
+    f"${float(last['Close']):.2f}"
 )
 
-col2.metric(
+c2.metric(
     "EMA 9",
     f"{float(last['EMA_9']):.2f}"
 )
 
-col3.metric(
+c3.metric(
     "EMA 21",
     f"{float(last['EMA_21']):.2f}"
 )
 
-col4.metric(
+c4.metric(
     "RSI",
     f"{float(last['RSI']):.1f}"
 )
 
+
+st.subheader("📊 Indicators")
+
 st.dataframe(
     gold.tail(20)
-)
-# VWAP
-typical_price = (
-    gold["High"] +
-    gold["Low"] +
-    gold["Close"]
-) / 3
-
-gold["VWAP"] = (
-    (typical_price * gold["Volume"]).cumsum()
-    /
-    gold["Volume"].cumsum()
-)
-
-
-# Volume analizė
-gold["Volume_Avg"] = (
-    gold["Volume"]
-    .rolling(20)
-    .mean()
-)
-
-gold["Volume_Spike"] = (
-    gold["Volume"] >
-    gold["Volume_Avg"] * 1.5
-)                                                                                                          
-col5, col6 = st.columns(2)
-
-col5.metric(
-    "VWAP",
-    f"{float(last['VWAP']):.2f}"
-)
-
-col6.metric(
-    "Volume Spike",
-    "🔥 YES" if last["Volume_Spike"] else "NO"
 )
