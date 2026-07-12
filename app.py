@@ -24,7 +24,7 @@ def load_gold():
 
     data = yf.download(
         "GC=F",
-        period="30d",
+        period="60d",
         interval="5m"
     )
 
