@@ -6,6 +6,7 @@ from indicators import add_indicators
 from scoring import calculate_gold_score
 from intraday import calculate_intraday_score
 from decision import final_decision
+from risk import calculate_risk
 st.set_page_config(
     page_title="Gold Terminal PRO",
     layout="wide"
@@ -142,3 +143,37 @@ c8.metric(
 with st.expander("🔍 H1 analizė"):
     for r in h1_reasons:
         st.write(r)
+st.divider()
+
+st.subheader("🧠 GOLD FINAL DECISION")
+
+
+final_score, final_signal, confidence_final, final_reasons = final_decision(
+    score,
+    signal,
+    h1_score,
+    h1_signal
+)
+
+
+d1, d2, d3 = st.columns(3)
+
+
+d1.metric(
+    "Final Score",
+    f"{final_score}/100"
+)
+
+d2.metric(
+    "Final Signal",
+    final_signal
+)
+
+d3.metric(
+    "Confidence",
+    confidence_final
+)
+with st.expander("🔍 Final analizė"):
+    for r in final_reasons:
+        st.write(r)
+
