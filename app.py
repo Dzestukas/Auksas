@@ -7,6 +7,7 @@ from scoring import calculate_gold_score
 from intraday import calculate_intraday_score
 from decision import final_decision
 from risk import calculate_risk
+from chart import create_gold_chart
 st.set_page_config(
     page_title="Gold Terminal PRO",
     layout="wide"
@@ -91,6 +92,18 @@ st.subheader("📊 Indicators")
 
 st.dataframe(
     gold.tail(20)
+)
+st.divider()
+
+st.subheader("📈 Gold Chart")
+
+
+fig = create_gold_chart(gold.tail(200))
+
+
+st.plotly_chart(
+    fig,
+    use_container_width=True
 )
 st.divider()
 
