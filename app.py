@@ -4,7 +4,7 @@ import pandas as pd
 
 from indicators import add_indicators
 from scoring import calculate_gold_score
-
+from intraday import calculate_intraday_score
 st.set_page_config(
     page_title="Gold Terminal PRO",
     layout="wide"
@@ -90,3 +90,54 @@ st.subheader("📊 Indicators")
 st.dataframe(
     gold.tail(20)
 )
+st.divider()
+
+st.subheader("🔵 Gold Intraday Radar (H1)")
+
+
+@st.cache_data(ttl=300)
+def load_intraday():
+
+    data = yf.download(
+        "GC=F",
+        period="100d",
+        interval="1h"
+    )
+
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = data.columns.get_level_values(0)
+
+    return data.dropna()
+
+
+
+gold_h1 = load_intraday()
+
+
+gold_h1 = add_indicators(gold_h1)
+
+
+last_h1 = gold_h1.iloc[-1]
+
+
+h1_score, h1_signal, h1_reasons = calculate_intraday_score(last_h1)
+
+
+c7, c8 = st.columns(2)
+
+
+c7.metric(
+    "H1 Score",
+    f"{h1_score}/100"
+)
+
+
+c8.metric(
+    "H1 Trend",
+    h1_signal
+)
+
+
+with st.expander("🔍 H1 analizė"):
+    for r in h1_reasons:
+        st.write(r)
