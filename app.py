@@ -168,7 +168,7 @@ risk_plan = calculate_risk(
     last,
     trade_direction
 )
-)
+
 
 
 d1, d2, d3 = st.columns(3)
