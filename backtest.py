@@ -1,71 +1,86 @@
 import pandas as pd
 
 
-def run_backtest(data, tp_points=15, sl_points=10):
+def run_backtest(data, tp_points=15, sl_points=10, max_bars=50):
 
     trades = []
 
-    for i in range(len(data) - 1):
+    i = 0
+
+
+    while i < len(data) - max_bars:
+
 
         signal = data["History_Signal"].iloc[i]
+
+
+        if signal == "":
+
+            i += 1
+            continue
+
 
         entry = float(data["Close"].iloc[i])
 
 
+        future = data.iloc[i+1:i+1+max_bars]
+
+
+        result = "OPEN"
+
+
         if signal == "BUY":
 
-            future = data.iloc[i+1:]
+            for _, row in future.iterrows():
 
-            hit_tp = future["High"].max() >= entry + tp_points
-            hit_sl = future["Low"].min() <= entry - sl_points
+                if row["High"] >= entry + tp_points:
 
-
-            if hit_tp and not hit_sl:
-                result = "WIN"
-
-            elif hit_sl:
-                result = "LOSS"
-
-            else:
-                result = "OPEN"
+                    result = "WIN"
+                    break
 
 
-            trades.append({
-                "Signal": "BUY",
-                "Entry": entry,
-                "Result": result
-            })
+                if row["Low"] <= entry - sl_points:
+
+                    result = "LOSS"
+                    break
+
 
 
         elif signal == "SELL":
 
-            future = data.iloc[i+1:]
+            for _, row in future.iterrows():
 
-            hit_tp = future["Low"].min() <= entry - tp_points
-            hit_sl = future["High"].max() >= entry + sl_points
+                if row["Low"] <= entry - tp_points:
 
-
-            if hit_tp and not hit_sl:
-                result = "WIN"
-
-            elif hit_sl:
-                result = "LOSS"
-
-            else:
-                result = "OPEN"
+                    result = "WIN"
+                    break
 
 
-            trades.append({
-                "Signal": "SELL",
+                if row["High"] >= entry + sl_points:
+
+                    result = "LOSS"
+                    break
+
+
+
+        trades.append(
+            {
+                "Signal": signal,
                 "Entry": entry,
                 "Result": result
-            })
+            }
+        )
+
+
+        # praleidžiame laiką po sandorio
+        i += max_bars
 
 
     results = pd.DataFrame(trades)
 
 
     if len(results) == 0:
+
         return results, 0
 
 
