@@ -1,18 +1,11 @@
 import streamlit as st
-import yfinance as yf
 import pandas as pd
 
-st.title("🟡 Gold Indicator TEST")
+st.title("Pandas test")
 
-gold = yf.download(
-    "GC=F",
-    period="5d",
-    interval="5m"
-)
+df = pd.DataFrame({
+    "Price": [4000, 4010, 4020],
+    "Volume": [100, 200, 300]
+})
 
-st.write("Duomenys gauti")
-
-st.write(gold.tail())
-
-st.write("Stulpeliai:")
-st.write(gold.columns)
+st.write(df)
