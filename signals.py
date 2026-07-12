@@ -1,43 +1,41 @@
 import plotly.graph_objects as go
 
 
-def add_signal_marker(fig, data, signal):
-
-    last_time = data.index[-1]
-    last_price = float(data["Close"].iloc[-1])
+def add_history_markers(fig, data):
 
 
-    if "BUY" in signal:
+    buys = data[data["History_Signal"] == "BUY"]
+
+    sells = data[data["History_Signal"] == "SELL"]
+
+
+    if not buys.empty:
 
         fig.add_trace(
             go.Scatter(
-                x=[last_time],
-                y=[last_price],
-                mode="markers+text",
+                x=buys.index,
+                y=buys["Low"],
+                mode="markers",
                 marker=dict(
-                    size=18,
+                    size=12,
                     symbol="triangle-up"
                 ),
-                text=["BUY"],
-                textposition="top center",
                 name="BUY"
             )
         )
 
 
-    elif "SELL" in signal:
+    if not sells.empty:
 
         fig.add_trace(
             go.Scatter(
-                x=[last_time],
-                y=[last_price],
-                mode="markers+text",
+                x=sells.index,
+                y=sells["High"],
+                mode="markers",
                 marker=dict(
-                    size=18,
+                    size=12,
                     symbol="triangle-down"
                 ),
-                text=["SELL"],
-                textposition="bottom center",
                 name="SELL"
             )
         )
