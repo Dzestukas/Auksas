@@ -1,6 +1,7 @@
 import plotly.graph_objects as go
 from signals import add_signal_marker
 
+
 def create_gold_chart(data):
 
     fig = go.Figure()
@@ -55,17 +56,17 @@ def create_gold_chart(data):
 
 
     fig = add_signal_marker(
-    fig,
-    data,
-    data["Signal"].iloc[-1] if "Signal" in data.columns else ""
-)
+        fig,
+        data,
+        data["Signal"].iloc[-1] if "Signal" in data.columns else ""
+    )
 
 
-fig.update_layout(
-    height=600,
-    xaxis_rangeslider_visible=False,
-    template="plotly_dark"
-)
+    fig.update_layout(
+        height=600,
+        xaxis_rangeslider_visible=False,
+        template="plotly_dark"
+    )
 
 
-return fig
+    return fig
