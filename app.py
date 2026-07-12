@@ -8,7 +8,7 @@ from intraday import calculate_intraday_score
 from decision import final_decision
 from risk import calculate_risk
 from chart import create_gold_chart
-from history_signals import generate_history_signals
+from history_signals_v2 import generate_history_signals_v2
 from backtest import run_backtest
 st.set_page_config(
     page_title="Gold Terminal PRO",
@@ -38,7 +38,7 @@ def load_gold():
 gold = load_gold()
 
 gold = add_indicators(gold)
-gold = generate_history_signals(gold)
+gold = generate_history_signals_v2(gold)
 
 last = gold.iloc[-1]
 score, signal, confidence, reasons = calculate_gold_score(last)
