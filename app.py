@@ -152,7 +152,22 @@ final_score, final_signal, confidence_final, final_reasons = final_decision(
     score,
     signal,
     h1_score,
-    h1_signal
+    h1_signal# Risk Management
+
+if "BUY" in final_signal:
+    trade_direction = "BUY"
+
+elif "SELL" in final_signal:
+    trade_direction = "SELL"
+
+else:
+    trade_direction = "BUY"
+
+
+risk_plan = calculate_risk(
+    last,
+    trade_direction
+)
 )
 
 
@@ -176,4 +191,30 @@ d3.metric(
 with st.expander("🔍 Final analizė"):
     for r in final_reasons:
         st.write(r)
+st.divider()
 
+st.subheader("🎯 TRADE PLAN")
+
+
+r1, r2, r3 = st.columns(3)
+
+
+r1.metric(
+    "Entry",
+    risk_plan["entry"]
+)
+
+r2.metric(
+    "Stop Loss",
+    risk_plan["stop_loss"]
+)
+
+r3.metric(
+    "Take Profit",
+    risk_plan["take_profit"]
+)
+
+
+st.write(
+    f"Risk / Reward: 1 : {risk_plan['risk_reward']}"
+)
