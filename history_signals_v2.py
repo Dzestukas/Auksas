@@ -3,6 +3,7 @@ def generate_history_signals_v2(data):
     data = data.copy()
 
 
+    # Volume patvirtinimas
     data["Volume_Avg"] = (
         data["Volume"]
         .rolling(20)
@@ -22,28 +23,27 @@ def generate_history_signals_v2(data):
 
         row = data.iloc[i]
 
-
         signal = ""
 
 
-        # BUY
+        # BUY signalas
         if (
             row["EMA_50"] > row["EMA_200"]
             and row["Close"] > row["VWAP"]
-            and row["RSI"] > 45
-            and row["RSI"] < 65
+            and row["RSI"] > 40
+            and row["RSI"] < 70
             and row["Volume"] > row["Volume_Avg"]
         ):
 
             signal = "BUY"
 
 
-        # SELL
+        # SELL signalas
         elif (
             row["EMA_50"] < row["EMA_200"]
             and row["Close"] < row["VWAP"]
-            and row["RSI"] > 35
-            and row["RSI"] < 55
+            and row["RSI"] > 30
+            and row["RSI"] < 60
             and row["Volume"] > row["Volume_Avg"]
         ):
 
@@ -51,7 +51,7 @@ def generate_history_signals_v2(data):
 
 
 
-        # neleidžia kartoti to paties signalo kas žvakę
+        # neleidžia kartoti to paties signalo iš eilės
         if signal == last_signal:
 
             signal = ""
