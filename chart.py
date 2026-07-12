@@ -1,5 +1,5 @@
 import plotly.graph_objects as go
-from signals import add_signal_marker
+from signals import add_history_markers
 
 
 def create_gold_chart(data):
@@ -55,10 +55,10 @@ def create_gold_chart(data):
         )
 
 
-    fig = add_signal_marker(
+    # Istoriniai BUY / SELL signalai
+    fig = add_history_markers(
         fig,
-        data,
-        data["Signal"].iloc[-1] if "Signal" in data.columns else ""
+        data
     )
 
 
