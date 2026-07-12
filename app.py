@@ -1,5 +1,13 @@
 import streamlit as st
+import yfinance as yf
 
-st.title("Testas")
+st.title("🟡 Gold Terminal V2 TEST")
 
-st.write("Streamlit veikia")
+gold = yf.download(
+    "GC=F",
+    period="5d",
+    interval="5m"
+)
+
+st.write("Aukso duomenys:")
+st.dataframe(gold.tail())
