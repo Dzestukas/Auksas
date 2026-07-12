@@ -1,15 +1,18 @@
-import pandas as pd
-
-
 def generate_history_signals_v2(data):
 
     data = data.copy()
-data["Volume_Avg"] = (
-    data["Volume"]
-    .rolling(20)
-    .mean()
-)
-data = data.dropna()
+
+
+    data["Volume_Avg"] = (
+        data["Volume"]
+        .rolling(20)
+        .mean()
+    )
+
+
+    data = data.dropna()
+
+
     signals = []
 
     last_signal = ""
@@ -23,7 +26,7 @@ data = data.dropna()
         signal = ""
 
 
-        # BUY sąlygos
+        # BUY
         if (
             row["EMA_50"] > row["EMA_200"]
             and row["Close"] > row["VWAP"]
@@ -35,7 +38,7 @@ data = data.dropna()
             signal = "BUY"
 
 
-        # SELL sąlygos
+        # SELL
         elif (
             row["EMA_50"] < row["EMA_200"]
             and row["Close"] < row["VWAP"]
@@ -47,17 +50,20 @@ data = data.dropna()
             signal = "SELL"
 
 
-        # leidžiame tik naują signalą
+
+        # neleidžia kartoti to paties signalo kas žvakę
         if signal == last_signal:
 
             signal = ""
 
 
         if signal != "":
+
             last_signal = signal
 
 
         signals.append(signal)
+
 
 
     data["History_Signal"] = signals
