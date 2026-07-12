@@ -41,7 +41,7 @@ gold = generate_history_signals(gold)
 
 last = gold.iloc[-1]
 score, signal, confidence, reasons = calculate_gold_score(last)
-gold["Signal"] = signal
+
 c1,c2,c3,c4 = st.columns(4)
 
 
