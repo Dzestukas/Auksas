@@ -62,3 +62,28 @@ col4.metric(
 st.dataframe(
     gold.tail(20)
 )
+# VWAP
+typical_price = (
+    gold["High"] +
+    gold["Low"] +
+    gold["Close"]
+) / 3
+
+gold["VWAP"] = (
+    (typical_price * gold["Volume"]).cumsum()
+    /
+    gold["Volume"].cumsum()
+)
+
+
+# Volume analizė
+gold["Volume_Avg"] = (
+    gold["Volume"]
+    .rolling(20)
+    .mean()
+)
+
+gold["Volume_Spike"] = (
+    gold["Volume"] >
+    gold["Volume_Avg"] * 1.5
+)                                                                                                          
