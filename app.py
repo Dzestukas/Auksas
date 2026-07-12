@@ -157,6 +157,18 @@ with st.expander("🔍 Backtest detalės"):
     )
 st.divider()
 
+st.subheader("🔎 History Signal Check")
+
+signal_check = gold[
+    gold["History_Signal"] != ""
+]
+
+
+st.dataframe(
+    signal_check.tail(50)
+)
+st.divider()
+
 st.subheader("🔵 Gold Intraday Radar (H1)")
 
 
