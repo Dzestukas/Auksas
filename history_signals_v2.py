@@ -4,7 +4,12 @@ import pandas as pd
 def generate_history_signals_v2(data):
 
     data = data.copy()
-
+data["Volume_Avg"] = (
+    data["Volume"]
+    .rolling(20)
+    .mean()
+)
+data = data.dropna()
     signals = []
 
     last_signal = ""
